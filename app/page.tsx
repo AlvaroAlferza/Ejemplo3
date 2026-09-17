@@ -9,6 +9,7 @@ import Gallery from "@/components/sections/Gallery";
 import Reservations from "@/components/sections/Reservations";
 import Location from "@/components/sections/Location";
 import CTA from "@/components/sections/CTA";
+import Reviews from "@/components/sections/Reviews";
 
 export default function Home() {
   return (
@@ -18,12 +19,12 @@ export default function Home() {
       <main>
         <Hero />
         <FeaturedDishes />
-        <Menu />
         <About />
         <Gallery />
         <Reservations />
         <Location />
         <CTA />
+        <Reviews />
       </main>
 
       <Footer />

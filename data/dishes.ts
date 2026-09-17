@@ -58,7 +58,7 @@ export const dishes: Dish[] = [
     description:
       "Arroz cremoso preparado con mariscos frescos, vino blanco y fondo de pescado.",
     price: 45,
-    image: "/images/arroz-mariscos.jpg",
+    image: "/images/mariscos.jpg",
   },
   {
     id: 6,
