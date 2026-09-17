@@ -49,7 +49,7 @@ export const dishes: Dish[] = [
     description:
       "Pollo deshilachado en una cremosa salsa de ají amarillo, acompañado de arroz.",
     price: 38,
-    image: "/images/aji-gallina.jpg",
+    image: "/images/gallina.jpg",
   },
   {
     id: 5,
@@ -67,7 +67,7 @@ export const dishes: Dish[] = [
     description:
       "Corte de res a la parrilla servido con papas nativas y salsa de chimichurri.",
     price: 58,
-    image: "/images/picanha.jpg",
+    image: "/images/picania.jpg",
     featured: true,
   },
   {

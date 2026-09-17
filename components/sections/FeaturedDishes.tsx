@@ -52,8 +52,9 @@ export default function FeaturedDishes() {
             description="Una selección de platos que representan nuestra forma de entender la cocina."
           />
 
+          {/* VER CARTA COMPLETA */}
           <motion.a
-            href="#menu"
+            href="/carta"
             whileHover={{ x: 5 }}
             className="inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-[#171714]"
           >
