@@ -5,15 +5,15 @@ import { motion } from "motion/react";
 const videos = [
   "/images/cocina1.mp4",
   "/images/cocina2.mp4",
-  "/images/cocina1.mp4",
   "/images/cocina2.mp4",
+  "/images/cocina1.mp4",
 ];
 
 export default function Gallery() {
   return (
     <section
       id="galeria"
-      className="overflow-hidden bg-[#171714] px-6 py-24 text-[#F7F2E8] sm:px-8 lg:px-10 lg:py-32"
+      className="overflow-hidden bg-[#F7F2E8] px-6 py-24 text-[#171714] sm:px-8 lg:px-10 lg:py-32"
     >
       <div className="mx-auto max-w-7xl">
         {/* ========================================================= */}
@@ -35,14 +35,14 @@ export default function Gallery() {
               Una mirada a Casa Misti
             </p>
 
-            <h2 className="mt-4 font-serif text-5xl leading-none tracking-[-0.03em] sm:text-6xl">
+            <h2 className="mt-4 font-serif text-5xl leading-none tracking-[-0.03em] text-[#171714] sm:text-6xl">
               Momentos que
               <br />
               se disfrutan.
             </h2>
           </div>
 
-          <p className="max-w-sm text-sm leading-7 text-white/40">
+          <p className="max-w-sm text-sm leading-7 text-[#171714]/50">
             Porque una buena experiencia empieza mucho antes del primer
             bocado.
           </p>
@@ -91,7 +91,7 @@ export default function Gallery() {
               whileHover={{
                 y: -6,
               }}
-              className={`group relative overflow-hidden rounded-[1.25rem] bg-[#24241F] ${
+              className={`group relative overflow-hidden rounded-[1.25rem] bg-[#E8E0D2] shadow-[0_10px_35px_rgba(23,23,20,0.06)] ${
                 index === 0 || index === 3
                   ? "aspect-[3/4]"
                   : "aspect-square"
@@ -120,16 +120,16 @@ export default function Gallery() {
               </motion.video>
 
               {/* ===================================================== */}
-              {/* OSCURECIMIENTO */}
+              {/* OVERLAY */}
               {/* ===================================================== */}
 
-              <div className="absolute inset-0 bg-black/10 transition-all duration-500 group-hover:bg-black/20" />
+              <div className="absolute inset-0 bg-black/5 transition-all duration-500 group-hover:bg-black/10" />
 
               {/* ===================================================== */}
               {/* DEGRADADO */}
               {/* ===================================================== */}
 
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/10 opacity-70 transition-opacity duration-500 group-hover:opacity-100" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent opacity-60 transition-opacity duration-500 group-hover:opacity-90" />
 
               {/* ===================================================== */}
               {/* NUMERO */}
@@ -147,7 +147,7 @@ export default function Gallery() {
                 transition={{
                   duration: 0.3,
                 }}
-                className="absolute bottom-4 left-4 text-xs uppercase tracking-[0.18em] text-white"
+                className="absolute bottom-4 left-4 text-xs font-medium uppercase tracking-[0.18em] text-white"
               >
                 0{index + 1}
               </motion.div>
@@ -168,7 +168,7 @@ export default function Gallery() {
                 transition={{
                   duration: 0.3,
                 }}
-                className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-black/20 backdrop-blur-md"
+                className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-black/20 backdrop-blur-md"
               >
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#C86B45]" />
               </motion.div>
@@ -187,7 +187,7 @@ export default function Gallery() {
                 transition={{
                   duration: 0.4,
                 }}
-                className="pointer-events-none absolute inset-0 rounded-[1.25rem] border border-[#C86B45]/40"
+                className="pointer-events-none absolute inset-0 rounded-[1.25rem] border border-[#C86B45]/60"
               />
 
               {/* ===================================================== */}
@@ -205,10 +205,42 @@ export default function Gallery() {
                   duration: 0.9,
                   ease: "easeInOut",
                 }}
-                className="pointer-events-none absolute inset-y-0 w-1/3 skew-x-[-18deg] bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                className="pointer-events-none absolute inset-y-0 w-1/3 skew-x-[-18deg] bg-gradient-to-r from-transparent via-white/20 to-transparent"
               />
             </motion.div>
           ))}
+        </motion.div>
+
+        {/* ========================================================= */}
+        {/* INDICADOR INFERIOR */}
+        {/* ========================================================= */}
+
+        <motion.div
+          initial={{
+            opacity: 0,
+            y: 15,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+            amount: 0.3,
+          }}
+          transition={{
+            delay: 0.4,
+            duration: 0.6,
+          }}
+          className="mt-8 flex items-center justify-center gap-3"
+        >
+          <span className="h-px w-8 bg-[#C86B45]/40" />
+
+          <span className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#171714]/30">
+            Casa Misti · Arequipa
+          </span>
+
+          <span className="h-px w-8 bg-[#C86B45]/40" />
         </motion.div>
       </div>
     </section>
