@@ -10,9 +10,11 @@ export default function Hero() {
   return (
     <section
       id="inicio"
-      className="relative flex min-h-screen items-end overflow-hidden bg-[#171714] text-[#F7F2E8]"
+      className="relative flex min-h-screen items-end justify-center overflow-hidden bg-[#171714] text-[#F7F2E8]"
     >
-      {/* VIDEO DE FONDO */}
+      {/* =========================================================
+          VIDEO DE FONDO
+      ========================================================= */}
       <motion.div
         initial={{ scale: 1.08, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -40,10 +42,12 @@ export default function Hero() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/30" />
 
         {/* DEGRADADO LATERAL SUTIL */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-transparent to-black/10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/25 via-transparent to-black/10" />
       </motion.div>
 
-      {/* DESTELLO DECORATIVO */}
+      {/* =========================================================
+          DESTELLO DECORATIVO
+      ========================================================= */}
       <motion.div
         animate={{
           y: [0, -10, 0],
@@ -63,11 +67,15 @@ export default function Hero() {
         />
       </motion.div>
 
-      {/* CONTENIDO */}
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-16 pt-32 sm:px-8 lg:px-10 lg:pb-20">
-        <div className="max-w-4xl">
+      {/* =========================================================
+          CONTENIDO CENTRADO
+      ========================================================= */}
+      <div className="relative z-10 mx-auto flex w-full max-w-7xl justify-center px-6 pb-16 pt-32 text-center sm:px-8 lg:px-10 lg:pb-20">
+        <div className="flex max-w-5xl flex-col items-center">
 
-          {/* EYEBROW */}
+          {/* =====================================================
+              EYEBROW
+          ===================================================== */}
           <motion.div
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
@@ -76,7 +84,7 @@ export default function Hero() {
               duration: 0.7,
               ease,
             }}
-            className="mb-6 flex items-center gap-3 text-xs uppercase tracking-[0.25em] text-white/65"
+            className="mb-6 flex items-center justify-center gap-3 text-xs uppercase tracking-[0.25em] text-white/65"
           >
             <motion.span
               initial={{ width: 0 }}
@@ -90,28 +98,51 @@ export default function Hero() {
             />
 
             Cocina peruana contemporánea
+
+            <motion.span
+              initial={{ width: 0 }}
+              animate={{ width: 40 }}
+              transition={{
+                delay: 0.55,
+                duration: 0.7,
+                ease,
+              }}
+              className="h-px bg-[#C86B45]"
+            />
           </motion.div>
 
-          {/* TITULO */}
+          {/* =====================================================
+              TITULO
+          ===================================================== */}
           <motion.h1
-            initial={{ opacity: 0, y: 60 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 60, filter: "blur(10px)" }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              filter: "blur(0px)",
+            }}
             transition={{
               delay: 0.42,
               duration: 1,
               ease,
             }}
-            className="max-w-4xl font-serif text-6xl leading-[0.92] tracking-[-0.04em] sm:text-7xl lg:text-[7.5rem]"
+            className="max-w-5xl font-serif text-6xl leading-[0.92] tracking-[-0.04em] sm:text-7xl lg:text-[7.5rem]"
           >
             Sabores que
             <br />
             cuentan una historia.
           </motion.h1>
 
-          {/* DESCRIPCIÓN */}
+          {/* =====================================================
+              DESCRIPCIÓN
+          ===================================================== */}
           <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 30, filter: "blur(6px)" }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              filter: "blur(0px)",
+            }}
             transition={{
               delay: 0.65,
               duration: 0.8,
@@ -122,7 +153,9 @@ export default function Hero() {
             {restaurant.description}
           </motion.p>
 
-          {/* BOTONES */}
+          {/* =====================================================
+              BOTONES
+          ===================================================== */}
           <motion.div
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
@@ -131,10 +164,11 @@ export default function Hero() {
               duration: 0.7,
               ease,
             }}
-            className="mt-9 flex flex-wrap gap-3"
+            className="mt-9 flex flex-wrap items-center justify-center gap-3"
           >
+            {/* EXPLORAR MENÚ → FEATURED DISHES */}
             <motion.a
-              href="#menu"
+              href="#destacados"
               whileHover={{
                 scale: 1.04,
                 y: -2,
@@ -145,6 +179,7 @@ export default function Hero() {
               className="inline-flex items-center gap-2 rounded-full bg-[#C86B45] px-6 py-3.5 text-sm font-semibold text-white"
             >
               Explorar menú
+
               <motion.span
                 whileHover={{
                   x: 3,
@@ -155,6 +190,7 @@ export default function Hero() {
               </motion.span>
             </motion.a>
 
+            {/* RESERVAR */}
             <motion.a
               href="#reservas"
               whileHover={{
@@ -170,7 +206,9 @@ export default function Hero() {
             </motion.a>
           </motion.div>
 
-          {/* UBICACIÓN */}
+          {/* =====================================================
+              UBICACIÓN
+          ===================================================== */}
           <motion.div
             initial={{
               opacity: 0,
@@ -185,7 +223,7 @@ export default function Hero() {
               duration: 0.8,
               ease,
             }}
-            className="mt-10 flex items-center gap-2 text-xs text-white/50"
+            className="mt-10 flex items-center justify-center gap-2 text-xs text-white/50"
           >
             <MapPin size={14} />
             {restaurant.address}
@@ -193,7 +231,9 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* INDICADOR DESCUBRIR */}
+      {/* =========================================================
+          INDICADOR DESCUBRIR
+      ========================================================= */}
       <motion.a
         href="#destacados"
         initial={{
@@ -224,7 +264,9 @@ export default function Hero() {
         </motion.span>
       </motion.a>
 
-      {/* BORDE INFERIOR SUTIL */}
+      {/* =========================================================
+          BORDE INFERIOR SUTIL
+      ========================================================= */}
       <motion.div
         initial={{
           scaleX: 0,

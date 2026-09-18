@@ -1,611 +1,469 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import {
   CalendarDays,
   Clock3,
+  MapPin,
+  Phone,
   Users,
   ArrowUpRight,
   Check,
-  Sparkles,
 } from "lucide-react";
-import { restaurant } from "@/data/restaurant";
+import { useState } from "react";
+
+const fadeUp = {
+  hidden: {
+    opacity: 0,
+    y: 28,
+    filter: "blur(8px)",
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.8,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const stagger = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
 
 export default function Reservations() {
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-  const [people, setPeople] = useState("2");
-  const [error, setError] = useState("");
+  const [formData, setFormData] = useState({
+    date: "",
+    time: "",
+    people: "2",
+  });
 
-  const handleReservation = () => {
-    if (!date || !time) {
-      setError("Selecciona una fecha y una hora para continuar.");
+  const [submitted, setSubmitted] = useState(false);
 
-      setTimeout(() => {
-        setError("");
-      }, 3500);
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!formData.date || !formData.time || !formData.people) {
       return;
     }
 
-    const message = `Hola, quiero reservar una mesa en ${
-      restaurant.name
-    }%0A%0A📅 Fecha: ${date}%0A🕐 Hora: ${time}%0A👥 Personas: ${people}`;
+    setSubmitted(true);
 
-    window.open(
-      `https://wa.me/${restaurant.whatsapp}?text=${message}`,
-      "_blank"
-    );
+    const message = `Hola, quiero reservar una mesa en Casa Misti.
+
+Fecha: ${formData.date}
+Hora: ${formData.time}
+Personas: ${formData.people}`;
+
+    const whatsappUrl = `https://wa.me/51999999999?text=${encodeURIComponent(
+      message
+    )}`;
+
+    setTimeout(() => {
+      window.open(whatsappUrl, "_blank");
+    }, 500);
   };
-
-  const isComplete = date && time;
 
   return (
     <section
       id="reservas"
-      className="relative overflow-hidden bg-[#171714] px-6 py-24 text-[#F7F2E8] sm:px-8 lg:px-10 lg:py-32"
+      className="relative overflow-hidden bg-[#171714] px-6 py-12 text-[#F7F2E8] sm:px-8 lg:px-10 lg:py-14"
     >
-      {/* BACKGROUND DECORATION */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <motion.div
-          animate={{
-            x: [0, 70, 0],
-            y: [0, -40, 0],
-            scale: [1, 1.12, 1],
-          }}
-          transition={{
-            duration: 14,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute -left-48 top-1/3 h-[500px] w-[500px] rounded-full bg-[#C86B45]/[0.06] blur-[100px]"
-        />
+      {/* =========================================================
+          DECORACIÓN DE FONDO
+      ========================================================= */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.2 }}
+        className="pointer-events-none absolute -left-32 top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-[#C86B45]/10 blur-[100px]"
+      />
 
-        <motion.div
-          animate={{
-            x: [0, -50, 0],
-            y: [0, 50, 0],
-            scale: [1, 1.15, 1],
-          }}
-          transition={{
-            duration: 17,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute -right-48 bottom-0 h-[550px] w-[550px] rounded-full bg-[#C86B45]/[0.045] blur-[110px]"
-        />
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.2, delay: 0.2 }}
+        className="pointer-events-none absolute -right-32 bottom-0 h-72 w-72 rounded-full bg-[#C86B45]/10 blur-[100px]"
+      />
 
-        <div className="absolute left-1/2 top-0 h-px w-[70%] -translate-x-1/2 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-      </div>
-
-      <div className="relative z-10 mx-auto max-w-7xl">
-        <div className="grid gap-16 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-20">
-          {/* LEFT CONTENT */}
+      <div className="relative mx-auto max-w-6xl">
+        {/* =========================================================
+            CONTENIDO PRINCIPAL — IZQUIERDA / DERECHA
+        ========================================================= */}
+        <div className="grid items-center gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-12">
+          {/* =====================================================
+              COLUMNA IZQUIERDA
+          ===================================================== */}
           <motion.div
-            initial={{
-              opacity: 0,
-              x: -70,
-            }}
-            whileInView={{
-              opacity: 1,
-              x: 0,
-            }}
-            viewport={{
-              once: true,
-              amount: 0.25,
-            }}
-            transition={{
-              duration: 0.9,
-              ease: [0.22, 1, 0.36, 1],
-            }}
+            variants={stagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            className="flex flex-col items-center text-center lg:items-start lg:text-left"
           >
-            {/* EYEBROW */}
+            {/* Eyebrow */}
             <motion.div
-              initial={{
-                opacity: 0,
-                y: 15,
-              }}
-              whileInView={{
-                opacity: 1,
-                y: 0,
-              }}
-              viewport={{ once: true }}
-              transition={{
-                delay: 0.1,
-                duration: 0.6,
-              }}
-              className="flex items-center gap-3"
+              variants={fadeUp}
+              className="mb-4 flex items-center gap-3"
             >
               <span className="h-px w-8 bg-[#C86B45]" />
 
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#C86B45]">
-                Reserva tu mesa
-              </p>
+              <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#C86B45]">
+                Reservaciones
+              </span>
+
+              <span className="h-px w-8 bg-[#C86B45] lg:hidden" />
             </motion.div>
 
-            {/* TITLE */}
+            {/* Título */}
             <motion.h2
-              initial={{
-                opacity: 0,
-                y: 25,
-              }}
-              whileInView={{
-                opacity: 1,
-                y: 0,
-              }}
-              viewport={{ once: true }}
-              transition={{
-                delay: 0.2,
-                duration: 0.8,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="mt-6 max-w-2xl font-serif text-5xl leading-[0.94] tracking-[-0.04em] sm:text-6xl lg:text-[4.6rem]"
+              variants={fadeUp}
+              className="max-w-xl text-4xl font-light leading-[0.98] tracking-[-0.04em] sm:text-5xl lg:text-[3.7rem]"
             >
-              Tu próxima
-              <br />
-              <span className="text-white/90">
-                experiencia
+              Reserva tu mesa.
+              <span className="block text-[#C86B45]">
+                Te esperamos.
               </span>
-              <br />
-              empieza aquí.
             </motion.h2>
 
-            {/* DESCRIPTION */}
+            {/* Descripción */}
             <motion.p
-              initial={{
-                opacity: 0,
-                y: 20,
-              }}
-              whileInView={{
-                opacity: 1,
-                y: 0,
-              }}
-              viewport={{ once: true }}
-              transition={{
-                delay: 0.35,
-                duration: 0.7,
-              }}
-              className="mt-7 max-w-md text-sm leading-7 text-white/45 sm:text-base"
+              variants={fadeUp}
+              className="mt-5 max-w-md text-sm leading-6 text-[#F7F2E8]/60 sm:text-base"
             >
-              Elige el día, la hora y el número de personas.
-              Envíanos tu solicitud y te contactaremos por
-              WhatsApp para confirmar tu mesa.
+              Vive una experiencia gastronómica diferente en el corazón de
+              Arequipa. Reserva tu mesa y déjanos preparar algo especial para
+              ti.
             </motion.p>
 
-            {/* INFO */}
+            {/* Información */}
             <motion.div
-              initial={{
-                opacity: 0,
-                y: 20,
-              }}
-              whileInView={{
-                opacity: 1,
-                y: 0,
-              }}
-              viewport={{ once: true }}
-              transition={{
-                delay: 0.5,
-                duration: 0.7,
-              }}
-              className="mt-9 flex items-center gap-4"
+              variants={stagger}
+              className="mt-6 grid w-full max-w-md gap-3 sm:grid-cols-2 lg:max-w-lg"
             >
-              <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.04]">
-                <Clock3
-                  size={17}
-                  strokeWidth={1.5}
-                  className="text-[#C86B45]"
-                />
-              </div>
+              {/* Ubicación */}
+              <motion.div
+                variants={fadeUp}
+                className="flex items-center gap-3 rounded-xl border border-white/8 bg-white/[0.035] px-4 py-3"
+              >
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#C86B45]/10 text-[#C86B45]">
+                  <MapPin size={16} strokeWidth={1.7} />
+                </div>
 
-              <div>
-                <p className="text-xs font-semibold text-white/80">
-                  Horario de atención
-                </p>
+                <div>
+                  <p className="text-[9px] uppercase tracking-[0.18em] text-[#F7F2E8]/35">
+                    Encuéntranos
+                  </p>
 
-                <p className="mt-1 text-xs text-white/35">
-                  Lunes a domingo
-                </p>
-              </div>
+                  <p className="mt-0.5 text-xs text-[#F7F2E8]/75">
+                    Arequipa, Perú
+                  </p>
+                </div>
+              </motion.div>
+
+              {/* Teléfono */}
+              <motion.div
+                variants={fadeUp}
+                className="flex items-center gap-3 rounded-xl border border-white/8 bg-white/[0.035] px-4 py-3"
+              >
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#C86B45]/10 text-[#C86B45]">
+                  <Phone size={16} strokeWidth={1.7} />
+                </div>
+
+                <div>
+                  <p className="text-[9px] uppercase tracking-[0.18em] text-[#F7F2E8]/35">
+                    Reservas
+                  </p>
+
+                  <p className="mt-0.5 text-xs text-[#F7F2E8]/75">
+                    +51 999 999 999
+                  </p>
+                </div>
+              </motion.div>
             </motion.div>
 
-            {/* SMALL DECORATIVE ELEMENT */}
+            {/* Línea inferior */}
             <motion.div
-              initial={{
-                opacity: 0,
-                scaleX: 0,
-              }}
-              whileInView={{
-                opacity: 1,
-                scaleX: 1,
-              }}
-              viewport={{ once: true }}
-              transition={{
-                delay: 0.7,
-                duration: 0.8,
-              }}
-              className="mt-12 h-px w-32 origin-left bg-gradient-to-r from-[#C86B45] to-transparent"
-            />
+              variants={fadeUp}
+              className="mt-6 flex items-center gap-3"
+            >
+              <span className="h-px w-10 bg-[#C86B45]" />
+
+              <span className="text-[10px] uppercase tracking-[0.2em] text-[#F7F2E8]/35">
+                Casa Misti · Arequipa
+              </span>
+            </motion.div>
           </motion.div>
 
-          {/* RESERVATION CARD */}
+          {/* =====================================================
+              COLUMNA DERECHA — FORMULARIO
+          ===================================================== */}
           <motion.div
             initial={{
               opacity: 0,
-              x: 70,
-              scale: 0.96,
+              x: 35,
+              scale: 0.97,
+              filter: "blur(8px)",
             }}
             whileInView={{
               opacity: 1,
               x: 0,
               scale: 1,
+              filter: "blur(0px)",
             }}
-            viewport={{
-              once: true,
-              amount: 0.2,
-            }}
+            viewport={{ once: true, amount: 0.2 }}
             transition={{
-              duration: 1,
+              duration: 0.9,
               ease: [0.22, 1, 0.36, 1],
             }}
             className="relative"
           >
-            {/* OUTER GLOW */}
-            <motion.div
-              animate={{
-                opacity: [0.3, 0.5, 0.3],
-                scale: [1, 1.03, 1],
-              }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="absolute -inset-3 rounded-[2.5rem] bg-[#C86B45]/[0.06] blur-2xl"
-            />
+            {/* Glow */}
+            <div className="pointer-events-none absolute -inset-4 rounded-[2rem] bg-[#C86B45]/10 blur-3xl" />
 
-            {/* CARD */}
-            <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-[#20201C] shadow-[0_30px_100px_rgba(0,0,0,0.35)]">
-              {/* CARD TOP DECORATION */}
-              <div className="absolute right-0 top-0 h-48 w-48 rounded-full bg-[#C86B45]/[0.07] blur-3xl" />
+            {/* Card */}
+            <div className="relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-[#20201C] p-5 shadow-2xl sm:p-6">
+              {/* Línea superior */}
+              <motion.div
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 1,
+                  delay: 0.3,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="absolute left-0 right-0 top-0 h-[2px] origin-left bg-[#C86B45]"
+              />
 
-              <div className="relative p-7 sm:p-9 lg:p-10">
-                {/* HEADER */}
-                <motion.div
-                  initial={{
-                    opacity: 0,
-                    y: 15,
-                  }}
-                  whileInView={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  viewport={{ once: true }}
-                  transition={{
-                    delay: 0.2,
-                    duration: 0.6,
-                  }}
-                  className="mb-9 flex items-start justify-between gap-5"
-                >
-                  <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#C86B45]">
-                      Paso 01
-                    </p>
+              {/* Header */}
+              <div className="mb-5 flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-[9px] uppercase tracking-[0.22em] text-[#C86B45]">
+                    Reserva online
+                  </p>
 
-                    <h3 className="mt-2 font-serif text-3xl tracking-[-0.02em] text-white">
-                      Elige tu visita
-                    </h3>
-                  </div>
-
-                  <motion.div
-                    animate={{
-                      rotate: [0, 5, -5, 0],
-                    }}
-                    transition={{
-                      duration: 5,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#C86B45]/20 bg-[#C86B45]/10"
-                  >
-                    <Sparkles
-                      size={17}
-                      className="text-[#C86B45]"
-                    />
-                  </motion.div>
-                </motion.div>
-
-                {/* FIELDS */}
-                <div className="grid gap-5 sm:grid-cols-2">
-                  {/* DATE */}
-                  <motion.div
-                    initial={{
-                      opacity: 0,
-                      y: 20,
-                    }}
-                    whileInView={{
-                      opacity: 1,
-                      y: 0,
-                    }}
-                    viewport={{ once: true }}
-                    transition={{
-                      delay: 0.3,
-                      duration: 0.6,
-                    }}
-                    className="sm:col-span-2"
-                  >
-                    <label className="mb-2.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-white/35">
-                      Fecha
-                    </label>
-
-                    <div
-                      className={`group relative overflow-hidden rounded-2xl border transition-all duration-300 ${
-                        error && !date
-                          ? "border-red-400/60"
-                          : date
-                            ? "border-[#C86B45]/40"
-                            : "border-white/10"
-                      } bg-white/[0.035]`}
-                    >
-                      <CalendarDays
-                        size={18}
-                        strokeWidth={1.5}
-                        className="absolute left-4 top-1/2 z-10 -translate-y-1/2 text-[#C86B45]"
-                      />
-
-                      <input
-                        type="date"
-                        value={date}
-                        onChange={(e) => {
-                          setDate(e.target.value);
-                          setError("");
-                        }}
-                        className="h-14 w-full cursor-pointer bg-transparent pl-12 pr-4 text-sm text-white outline-none [color-scheme:dark]"
-                      />
-
-                      {date && (
-                        <motion.div
-                          initial={{
-                            opacity: 0,
-                            scale: 0,
-                          }}
-                          animate={{
-                            opacity: 1,
-                            scale: 1,
-                          }}
-                          className="absolute right-4 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full bg-[#C86B45]"
-                        >
-                          <Check
-                            size={13}
-                            strokeWidth={2.5}
-                            className="text-white"
-                          />
-                        </motion.div>
-                      )}
-                    </div>
-                  </motion.div>
-
-                  {/* TIME */}
-                  <motion.div
-                    initial={{
-                      opacity: 0,
-                      y: 20,
-                    }}
-                    whileInView={{
-                      opacity: 1,
-                      y: 0,
-                    }}
-                    viewport={{ once: true }}
-                    transition={{
-                      delay: 0.4,
-                      duration: 0.6,
-                    }}
-                  >
-                    <label className="mb-2.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-white/35">
-                      Hora
-                    </label>
-
-                    <div
-                      className={`group relative overflow-hidden rounded-2xl border transition-all duration-300 ${
-                        error && !time
-                          ? "border-red-400/60"
-                          : time
-                            ? "border-[#C86B45]/40"
-                            : "border-white/10"
-                      } bg-white/[0.035]`}
-                    >
-                      <Clock3
-                        size={18}
-                        strokeWidth={1.5}
-                        className="absolute left-4 top-1/2 z-10 -translate-y-1/2 text-[#C86B45]"
-                      />
-
-                      <input
-                        type="time"
-                        value={time}
-                        onChange={(e) => {
-                          setTime(e.target.value);
-                          setError("");
-                        }}
-                        className="h-14 w-full cursor-pointer bg-transparent pl-12 pr-4 text-sm text-white outline-none [color-scheme:dark]"
-                      />
-                    </div>
-                  </motion.div>
-
-                  {/* PEOPLE */}
-                  <motion.div
-                    initial={{
-                      opacity: 0,
-                      y: 20,
-                    }}
-                    whileInView={{
-                      opacity: 1,
-                      y: 0,
-                    }}
-                    viewport={{ once: true }}
-                    transition={{
-                      delay: 0.5,
-                      duration: 0.6,
-                    }}
-                  >
-                    <label className="mb-2.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-white/35">
-                      Personas
-                    </label>
-
-                    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035]">
-                      <Users
-                        size={18}
-                        strokeWidth={1.5}
-                        className="absolute left-4 top-1/2 z-10 -translate-y-1/2 text-[#C86B45]"
-                      />
-
-                      <select
-                        value={people}
-                        onChange={(e) =>
-                          setPeople(e.target.value)
-                        }
-                        className="h-14 w-full cursor-pointer appearance-none bg-transparent pl-12 pr-4 text-sm text-white outline-none [color-scheme:dark]"
-                      >
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(
-                          (number) => (
-                            <option
-                              key={number}
-                              value={number}
-                              className="bg-[#20201C]"
-                            >
-                              {number}{" "}
-                              {number === 1
-                                ? "persona"
-                                : "personas"}
-                            </option>
-                          )
-                        )}
-                      </select>
-
-                      <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-white/30">
-                        <svg
-                          width="12"
-                          height="7"
-                          viewBox="0 0 12 7"
-                          fill="none"
-                        >
-                          <path
-                            d="M1 1L6 6L11 1"
-                            stroke="currentColor"
-                            strokeWidth="1.2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </div>
-                    </div>
-                  </motion.div>
+                  <h3 className="mt-1 text-xl font-medium tracking-tight text-[#F7F2E8] sm:text-2xl">
+                    Tu mesa te espera
+                  </h3>
                 </div>
 
-                {/* ERROR */}
-                <AnimatePresence>
-                  {error && (
-                    <motion.div
-                      initial={{
-                        opacity: 0,
-                        height: 0,
-                        y: -5,
-                      }}
-                      animate={{
-                        opacity: 1,
-                        height: "auto",
-                        y: 0,
-                      }}
-                      exit={{
-                        opacity: 0,
-                        height: 0,
-                      }}
-                      className="overflow-hidden"
-                    >
-                      <p className="pt-4 text-xs text-red-400">
-                        {error}
-                      </p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                {/* BUTTON */}
-                <motion.button
-                  onClick={handleReservation}
-                  whileHover={{
-                    y: -3,
-                    scale: 1.01,
-                  }}
-                  whileTap={{
-                    scale: 0.98,
-                  }}
-                  className="group relative mt-7 flex h-14 w-full items-center justify-center gap-3 overflow-hidden rounded-2xl bg-[#C86B45] text-sm font-semibold text-white shadow-[0_15px_40px_rgba(200,107,69,0.18)]"
-                >
-                  {/* Shine */}
-                  <motion.span
-                    animate={{
-                      x: ["-120%", "120%"],
-                    }}
-                    transition={{
-                      duration: 2.8,
-                      repeat: Infinity,
-                      repeatDelay: 3,
-                      ease: "easeInOut",
-                    }}
-                    className="absolute inset-y-0 w-1/3 skew-x-[-20deg] bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                  />
-
-                  <span className="relative">
-                    {isComplete
-                      ? "Continuar con WhatsApp"
-                      : "Solicitar reserva"}
-                  </span>
-
-                  <motion.span
-                    animate={{
-                      x: [0, 4, 0],
-                    }}
-                    transition={{
-                      duration: 1.8,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                    className="relative"
-                  >
-                    <ArrowUpRight size={18} />
-                  </motion.span>
-                </motion.button>
-
-                {/* FOOTER */}
-                <div className="mt-5 flex items-center justify-center gap-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-[#C86B45]" />
-
-                  <p className="text-center text-[10px] tracking-wide text-white/25">
-                    Confirmamos tu reserva directamente por WhatsApp
-                  </p>
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#C86B45]/20 bg-[#C86B45]/10 text-[#C86B45]">
+                  <CalendarDays size={18} strokeWidth={1.6} />
                 </div>
               </div>
 
-              {/* BOTTOM LINE */}
-              <motion.div
-                initial={{
-                  scaleX: 0,
-                }}
-                whileInView={{
-                  scaleX: 1,
-                }}
-                viewport={{
-                  once: true,
-                }}
-                transition={{
-                  delay: 0.8,
-                  duration: 1,
-                }}
-                className="h-[2px] origin-left bg-gradient-to-r from-transparent via-[#C86B45] to-transparent"
-              />
+              {/* Formulario */}
+              <form onSubmit={handleSubmit}>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {/* Fecha */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                  >
+                    <label
+                      htmlFor="date"
+                      className="mb-1.5 block text-[9px] uppercase tracking-[0.18em] text-[#F7F2E8]/40"
+                    >
+                      Fecha
+                    </label>
+
+                    <div className="relative">
+                      <CalendarDays
+                        size={15}
+                        strokeWidth={1.6}
+                        className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#C86B45]"
+                      />
+
+                      <input
+                        id="date"
+                        name="date"
+                        type="date"
+                        value={formData.date}
+                        onChange={handleChange}
+                        required
+                        className="h-11 w-full rounded-lg border border-white/10 bg-[#171714] pl-9 pr-3 text-xs text-[#F7F2E8] outline-none transition focus:border-[#C86B45]/60 focus:ring-1 focus:ring-[#C86B45]/20 [color-scheme:dark]"
+                      />
+                    </div>
+                  </motion.div>
+
+                  {/* Hora */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
+                  >
+                    <label
+                      htmlFor="time"
+                      className="mb-1.5 block text-[9px] uppercase tracking-[0.18em] text-[#F7F2E8]/40"
+                    >
+                      Hora
+                    </label>
+
+                    <div className="relative">
+                      <Clock3
+                        size={15}
+                        strokeWidth={1.6}
+                        className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#C86B45]"
+                      />
+
+                      <input
+                        id="time"
+                        name="time"
+                        type="time"
+                        value={formData.time}
+                        onChange={handleChange}
+                        required
+                        className="h-11 w-full rounded-lg border border-white/10 bg-[#171714] pl-9 pr-3 text-xs text-[#F7F2E8] outline-none transition focus:border-[#C86B45]/60 focus:ring-1 focus:ring-[#C86B45]/20 [color-scheme:dark]"
+                      />
+                    </div>
+                  </motion.div>
+                </div>
+
+                {/* Personas */}
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  className="mt-3"
+                >
+                  <label
+                    htmlFor="people"
+                    className="mb-1.5 block text-[9px] uppercase tracking-[0.18em] text-[#F7F2E8]/40"
+                  >
+                    Número de personas
+                  </label>
+
+                  <div className="relative">
+                    <Users
+                      size={15}
+                      strokeWidth={1.6}
+                      className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#C86B45]"
+                    />
+
+                    <select
+                      id="people"
+                      name="people"
+                      value={formData.people}
+                      onChange={handleChange}
+                      className="h-11 w-full appearance-none rounded-lg border border-white/10 bg-[#171714] pl-9 pr-3 text-xs text-[#F7F2E8] outline-none transition focus:border-[#C86B45]/60 focus:ring-1 focus:ring-[#C86B45]/20"
+                    >
+                      <option value="1">1 persona</option>
+                      <option value="2">2 personas</option>
+                      <option value="3">3 personas</option>
+                      <option value="4">4 personas</option>
+                      <option value="5">5 personas</option>
+                      <option value="6">6 personas</option>
+                      <option value="7">7 personas</option>
+                      <option value="8">8 personas</option>
+                      <option value="9">9 personas</option>
+                      <option value="10">10 personas</option>
+                    </select>
+                  </div>
+                </motion.div>
+
+                {/* Botón */}
+                <motion.button
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.5 }}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="submit"
+                  className="group relative mt-4 flex h-11 w-full items-center justify-center gap-2 overflow-hidden rounded-lg bg-[#C86B45] px-5 text-xs font-semibold uppercase tracking-[0.12em] text-white transition-shadow duration-500 hover:shadow-[0_12px_35px_rgba(200,107,69,0.22)]"
+                >
+                  {/* Shine */}
+                  <motion.span
+                    initial={{ x: "-120%" }}
+                    whileHover={{ x: "120%" }}
+                    transition={{ duration: 0.7, ease: "easeInOut" }}
+                    className="absolute inset-y-0 w-20 -skew-x-12 bg-white/20"
+                  />
+
+                  <span className="relative z-10">
+                    {submitted ? "Solicitud enviada" : "Reservar mesa"}
+                  </span>
+
+                  {submitted ? (
+                    <Check
+                      size={15}
+                      className="relative z-10"
+                      strokeWidth={2}
+                    />
+                  ) : (
+                    <ArrowUpRight
+                      size={15}
+                      className="relative z-10 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                      strokeWidth={2}
+                    />
+                  )}
+                </motion.button>
+              </form>
+
+              {/* Texto inferior */}
+              <motion.p
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 0.7 }}
+                className="mt-3 text-center text-[9px] leading-4 text-[#F7F2E8]/30"
+              >
+                Te contactaremos por WhatsApp para confirmar tu reserva.
+              </motion.p>
             </div>
           </motion.div>
         </div>
+
+        {/* =========================================================
+            INDICADOR INFERIOR
+        ========================================================= */}
+        <motion.div
+          initial={{ opacity: 0, scaleX: 0 }}
+          whileInView={{ opacity: 1, scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.9, delay: 0.5 }}
+          className="mx-auto mt-8 flex max-w-xs items-center justify-center gap-3"
+        >
+          <span className="h-px flex-1 bg-white/10" />
+
+          <motion.span
+            animate={{
+              opacity: [0.3, 1, 0.3],
+              scale: [0.8, 1, 0.8],
+            }}
+            transition={{
+              duration: 2.2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="h-1.5 w-1.5 rounded-full bg-[#C86B45]"
+          />
+
+          <span className="h-px flex-1 bg-white/10" />
+        </motion.div>
       </div>
     </section>
   );

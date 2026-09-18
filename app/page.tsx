@@ -23,8 +23,9 @@ export default function Home() {
         <Gallery />
         <Reservations />
         <Reviews />
-        <Location />
+        
         <CTA />
+        <Location />
         
       </main>
 
