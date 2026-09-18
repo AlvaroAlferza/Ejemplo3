@@ -9,6 +9,50 @@ const videos = [
   "/images/cocina1.mp4",
 ];
 
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const textVariants = {
+  hidden: {
+    opacity: 0,
+    y: 35,
+    filter: "blur(8px)",
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.9,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const descriptionVariants = {
+  hidden: {
+    opacity: 0,
+    y: 25,
+    filter: "blur(6px)",
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.8,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
 export default function Gallery() {
   return (
     <section
@@ -16,36 +60,116 @@ export default function Gallery() {
       className="overflow-hidden bg-[#F7F2E8] px-6 py-24 text-[#171714] sm:px-8 lg:px-10 lg:py-32"
     >
       <div className="mx-auto max-w-7xl">
+
         {/* ========================================================= */}
-        {/* TITULO */}
+        {/* TITULO CENTRADO */}
         {/* ========================================================= */}
 
         <motion.div
-          initial={{ opacity: 0, y: 35 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{
-            duration: 0.8,
-            ease: [0.22, 1, 0.36, 1],
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{
+            once: true,
+            amount: 0.3,
           }}
-          className="flex flex-col justify-between gap-6 md:flex-row md:items-end"
+          className="mx-auto flex max-w-3xl flex-col items-center text-center"
         >
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#C86B45]">
-              Una mirada a Casa Misti
-            </p>
+          {/* ETIQUETA */}
 
-            <h2 className="mt-4 font-serif text-5xl leading-none tracking-[-0.03em] text-[#171714] sm:text-6xl">
-              Momentos que
-              <br />
-              se disfrutan.
-            </h2>
-          </div>
+          <motion.p
+            variants={textVariants}
+            className="text-xs font-semibold uppercase tracking-[0.28em] text-[#C86B45]"
+          >
+            Una mirada a Casa Misti
+          </motion.p>
 
-          <p className="max-w-sm text-sm leading-7 text-[#171714]/50">
+          {/* TITULO */}
+
+          <motion.h2
+            variants={textVariants}
+            className="mt-4 font-serif text-5xl leading-[0.95] tracking-[-0.035em] text-[#171714] sm:text-6xl lg:text-[4.25rem]"
+          >
+            Momentos que
+            <br />
+            se disfrutan.
+          </motion.h2>
+
+          {/* DESCRIPCION */}
+
+          <motion.p
+            variants={descriptionVariants}
+            className="mt-6 max-w-xl text-sm leading-7 text-[#171714]/50 sm:text-base"
+          >
             Porque una buena experiencia empieza mucho antes del primer
             bocado.
-          </p>
+          </motion.p>
+
+          {/* DECORACION */}
+
+          <motion.div
+            variants={textVariants}
+            className="mt-8 flex items-center justify-center gap-3"
+          >
+            <motion.span
+              initial={{
+                width: 0,
+                opacity: 0,
+              }}
+              whileInView={{
+                width: 32,
+                opacity: 1,
+              }}
+              viewport={{
+                once: true,
+              }}
+              transition={{
+                delay: 0.45,
+                duration: 0.6,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="h-px bg-[#C86B45]/50"
+            />
+
+            <motion.span
+              initial={{
+                opacity: 0,
+                scale: 0.6,
+              }}
+              whileInView={{
+                opacity: 1,
+                scale: 1,
+              }}
+              viewport={{
+                once: true,
+              }}
+              transition={{
+                delay: 0.55,
+                duration: 0.5,
+              }}
+              className="h-1.5 w-1.5 rounded-full bg-[#C86B45]"
+            />
+
+            <motion.span
+              initial={{
+                width: 0,
+                opacity: 0,
+              }}
+              whileInView={{
+                width: 32,
+                opacity: 1,
+              }}
+              viewport={{
+                once: true,
+              }}
+              transition={{
+                delay: 0.45,
+                duration: 0.6,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="h-px bg-[#C86B45]/50"
+            />
+          </motion.div>
         </motion.div>
 
         {/* ========================================================= */}
@@ -64,6 +188,7 @@ export default function Gallery() {
             visible: {
               transition: {
                 staggerChildren: 0.12,
+                delayChildren: 0.15,
               },
             },
           }}
@@ -71,17 +196,19 @@ export default function Gallery() {
         >
           {videos.map((video, index) => (
             <motion.div
-              key={video}
+              key={`${video}-${index}`}
               variants={{
                 hidden: {
                   opacity: 0,
                   y: 50,
                   scale: 0.96,
+                  filter: "blur(5px)",
                 },
                 visible: {
                   opacity: 1,
                   y: 0,
                   scale: 1,
+                  filter: "blur(0px)",
                   transition: {
                     duration: 0.8,
                     ease: [0.22, 1, 0.36, 1],
@@ -219,10 +346,12 @@ export default function Gallery() {
           initial={{
             opacity: 0,
             y: 15,
+            filter: "blur(5px)",
           }}
           whileInView={{
             opacity: 1,
             y: 0,
+            filter: "blur(0px)",
           }}
           viewport={{
             once: true,
@@ -230,17 +359,48 @@ export default function Gallery() {
           }}
           transition={{
             delay: 0.4,
-            duration: 0.6,
+            duration: 0.7,
+            ease: [0.22, 1, 0.36, 1],
           }}
           className="mt-8 flex items-center justify-center gap-3"
         >
-          <span className="h-px w-8 bg-[#C86B45]/40" />
+          <motion.span
+            initial={{
+              width: 0,
+            }}
+            whileInView={{
+              width: 32,
+            }}
+            viewport={{
+              once: true,
+            }}
+            transition={{
+              delay: 0.55,
+              duration: 0.6,
+            }}
+            className="h-px bg-[#C86B45]/40"
+          />
 
           <span className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#171714]/30">
             Casa Misti · Arequipa
           </span>
 
-          <span className="h-px w-8 bg-[#C86B45]/40" />
+          <motion.span
+            initial={{
+              width: 0,
+            }}
+            whileInView={{
+              width: 32,
+            }}
+            viewport={{
+              once: true,
+            }}
+            transition={{
+              delay: 0.55,
+              duration: 0.6,
+            }}
+            className="h-px bg-[#C86B45]/40"
+          />
         </motion.div>
       </div>
     </section>

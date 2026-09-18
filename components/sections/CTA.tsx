@@ -4,91 +4,218 @@ import { motion } from "motion/react";
 import { ArrowUpRight, MessageCircle } from "lucide-react";
 import { restaurant } from "@/data/restaurant";
 
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.05,
+    },
+  },
+};
+
+const textVariants = {
+  hidden: {
+    opacity: 0,
+    y: 24,
+    filter: "blur(7px)",
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.75,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const buttonVariants = {
+  hidden: {
+    opacity: 0,
+    y: 18,
+    scale: 0.95,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.65,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
 export default function CTA() {
   return (
-    <section className="overflow-hidden bg-[#C86B45] px-6 py-24 text-white sm:px-8 lg:px-10 lg:py-32">
-      <div className="relative mx-auto max-w-7xl">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{
-            duration: 0.9,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-          className="relative z-10 max-w-4xl"
+    <section className="relative overflow-hidden bg-[#C86B45] px-6 py-12 text-white sm:px-8 lg:px-10 lg:py-14">
+      {/* ========================================================= */}
+      {/* DECORACIÓN */}
+      {/* ========================================================= */}
+
+      <motion.div
+        initial={{
+          opacity: 0,
+          scale: 0.7,
+          rotate: -20,
+        }}
+        whileInView={{
+          opacity: 1,
+          scale: 1,
+          rotate: 0,
+        }}
+        viewport={{
+          once: true,
+        }}
+        transition={{
+          duration: 1,
+          ease: [0.22, 1, 0.36, 1],
+        }}
+        className="pointer-events-none absolute -right-20 top-1/2 hidden h-64 w-64 -translate-y-1/2 rounded-full border border-white/15 lg:block"
+      />
+
+      <motion.div
+        animate={{
+          rotate: 360,
+        }}
+        transition={{
+          duration: 35,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+        className="pointer-events-none absolute -right-28 top-1/2 hidden h-80 w-80 -translate-y-1/2 rounded-full border border-dashed border-white/10 lg:block"
+      />
+
+      {/* ========================================================= */}
+      {/* CONTENIDO */}
+      {/* ========================================================= */}
+
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{
+          once: true,
+          amount: 0.25,
+        }}
+        className="relative z-10 mx-auto flex max-w-3xl flex-col items-center text-center"
+      >
+        {/* ETIQUETA */}
+
+        <motion.p
+          variants={textVariants}
+          className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/60"
         >
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-white/60">
-            ¿Nos vemos?
-          </p>
+          ¿Nos vemos?
+        </motion.p>
 
-          <h2 className="mt-5 font-serif text-6xl leading-[0.9] tracking-[-0.04em] sm:text-7xl lg:text-[7rem]">
-            Hagamos de hoy
-            <br />
-            algo especial.
-          </h2>
+        {/* TITULO */}
 
-          <p className="mt-8 max-w-lg text-base leading-7 text-white/70">
-            Reserva una mesa y ven a disfrutar una experiencia creada
-            alrededor de nuestra cocina.
-          </p>
+        <motion.h2
+          variants={textVariants}
+          className="mt-3 font-serif text-4xl leading-[0.95] tracking-[-0.035em] sm:text-5xl lg:text-[4rem]"
+        >
+          Hagamos de hoy
+          <br />
+          algo especial.
+        </motion.h2>
 
-          <div className="mt-9 flex flex-wrap gap-3">
-            <motion.a
-              href="#reservas"
+        {/* DESCRIPCION */}
+
+        <motion.p
+          variants={textVariants}
+          className="mt-4 max-w-lg text-sm leading-6 text-white/65"
+        >
+          Reserva una mesa y disfruta una experiencia creada alrededor
+          de nuestra cocina.
+        </motion.p>
+
+        {/* ========================================================= */}
+        {/* BOTONES */}
+        {/* ========================================================= */}
+
+        <motion.div
+          variants={containerVariants}
+          className="mt-6 flex flex-wrap items-center justify-center gap-3"
+        >
+          {/* RESERVAR */}
+
+          <motion.a
+            variants={buttonVariants}
+            href="#reservas"
+            whileHover={{
+              scale: 1.04,
+              y: -3,
+            }}
+            whileTap={{
+              scale: 0.97,
+            }}
+            className="group inline-flex items-center gap-2.5 rounded-full bg-[#171714] px-5 py-3 text-xs font-semibold text-white shadow-[0_8px_25px_rgba(23,23,20,0.18)]"
+          >
+            <span>Reservar una mesa</span>
+
+            <motion.span
               whileHover={{
-                scale: 1.04,
-                y: -3,
+                rotate: 45,
               }}
-              whileTap={{ scale: 0.97 }}
-              className="inline-flex items-center gap-2 rounded-full bg-[#171714] px-6 py-3.5 text-sm font-semibold text-white"
+              transition={{
+                duration: 0.3,
+              }}
+              className="flex h-6 w-6 items-center justify-center rounded-full bg-[#C86B45]"
             >
-              Reservar una mesa
-              <ArrowUpRight size={17} />
-            </motion.a>
+              <ArrowUpRight size={14} />
+            </motion.span>
+          </motion.a>
 
-            <motion.a
-              href={`https://wa.me/${restaurant.whatsapp}`}
-              target="_blank"
-              rel="noreferrer"
+          {/* WHATSAPP */}
+
+          <motion.a
+            variants={buttonVariants}
+            href={`https://wa.me/${restaurant.whatsapp}`}
+            target="_blank"
+            rel="noreferrer"
+            whileHover={{
+              scale: 1.04,
+              y: -3,
+            }}
+            whileTap={{
+              scale: 0.97,
+            }}
+            className="group inline-flex items-center gap-2.5 rounded-full border border-[#25D366]/60 bg-[#25D366] px-5 py-3 text-xs font-semibold text-white shadow-[0_8px_25px_rgba(37,211,102,0.18)] transition-colors duration-300 hover:bg-[#20bd5a]"
+          >
+            <motion.span
               whileHover={{
-                scale: 1.04,
-                y: -3,
-                backgroundColor: "rgba(255,255,255,0.18)",
+                scale: 1.12,
+                rotate: 5,
               }}
-              whileTap={{ scale: 0.97 }}
-              className="inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3.5 text-sm font-semibold"
+              transition={{
+                duration: 0.3,
+              }}
             >
-              <MessageCircle size={17} />
-              WhatsApp
-            </motion.a>
-          </div>
+              <MessageCircle size={16} />
+            </motion.span>
+
+            <span>¿Tienes alguna duda? Escríbenos</span>
+          </motion.a>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.6, rotate: -20 }}
-          whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
-          viewport={{ once: true }}
-          transition={{
-            delay: 0.3,
-            duration: 1,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-          className="absolute -right-10 top-1/2 hidden h-80 w-80 -translate-y-1/2 rounded-full border border-white/15 lg:block"
-        />
+        {/* DETALLE */}
 
         <motion.div
-          animate={{
-            rotate: 360,
-          }}
-          transition={{
-            duration: 35,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          className="absolute -right-16 top-1/2 hidden h-96 w-96 -translate-y-1/2 rounded-full border border-dashed border-white/10 lg:block"
-        />
-      </div>
+          variants={textVariants}
+          className="mt-5 flex items-center gap-3"
+        >
+          <span className="h-px w-6 bg-white/20" />
+
+          <span className="text-[8px] font-semibold uppercase tracking-[0.22em] text-white/35">
+            Casa Misti · Arequipa
+          </span>
+
+          <span className="h-px w-6 bg-white/20" />
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

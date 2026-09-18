@@ -16,6 +16,52 @@ const restaurantImages = [
   "/images/restaurante4.jpg",
 ];
 
+const contentVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const textVariants = {
+  hidden: {
+    opacity: 0,
+    y: 35,
+    filter: "blur(8px)",
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.9,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const featureVariants = {
+  hidden: {
+    opacity: 0,
+    y: 30,
+    scale: 0.96,
+    filter: "blur(5px)",
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.7,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
 export default function About() {
   const [currentImage, setCurrentImage] = useState(0);
 
@@ -32,25 +78,44 @@ export default function About() {
       id="nosotros"
       className="overflow-hidden bg-[#171714] px-6 py-24 text-[#F7F2E8] sm:px-8 lg:px-10 lg:py-32"
     >
-      <div className="mx-auto grid max-w-7xl gap-16 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-        {/* IMÁGENES */}
+      <div className="mx-auto grid max-w-7xl gap-16 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+
+        {/* =====================================================
+            GALERÍA
+        ===================================================== */}
         <motion.div
-          initial={{ opacity: 0, x: -70 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.25 }}
+          initial={{
+            opacity: 0,
+            x: -70,
+            scale: 0.97,
+            filter: "blur(6px)",
+          }}
+          whileInView={{
+            opacity: 1,
+            x: 0,
+            scale: 1,
+            filter: "blur(0px)",
+          }}
+          viewport={{
+            once: true,
+            amount: 0.25,
+          }}
           transition={{
-            duration: 0.9,
+            duration: 1,
             ease: [0.22, 1, 0.36, 1],
           }}
-          className="relative"
+          className="relative mx-auto w-full max-w-xl lg:mx-0"
         >
           <div className="relative overflow-hidden rounded-[2rem]">
             <div className="relative aspect-[4/5] w-full bg-[#24241F]">
+
               <AnimatePresence mode="sync">
                 <motion.img
                   key={restaurantImages[currentImage]}
                   src={restaurantImages[currentImage]}
-                  alt={`Interior de Casa Misti - imagen ${currentImage + 1}`}
+                  alt={`Interior de Casa Misti - imagen ${
+                    currentImage + 1
+                  }`}
                   initial={{
                     opacity: 0,
                     scale: 1.08,
@@ -78,10 +143,27 @@ export default function About() {
               </AnimatePresence>
 
               {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent" />
 
-              {/* Número de imagen */}
-              <div className="absolute bottom-5 left-5 flex items-center gap-3">
+              {/* Información inferior */}
+              <motion.div
+                initial={{
+                  opacity: 0,
+                  y: 10,
+                }}
+                whileInView={{
+                  opacity: 1,
+                  y: 0,
+                }}
+                viewport={{
+                  once: true,
+                }}
+                transition={{
+                  delay: 0.7,
+                  duration: 0.6,
+                }}
+                className="absolute bottom-5 left-5 flex items-center gap-3"
+              >
                 <span className="text-[10px] font-semibold tracking-[0.2em] text-white/70">
                   0{currentImage + 1}
                 </span>
@@ -91,7 +173,7 @@ export default function About() {
                 <span className="text-[10px] uppercase tracking-[0.18em] text-white/50">
                   Casa Misti
                 </span>
-              </div>
+              </motion.div>
 
               {/* Indicadores */}
               <div className="absolute bottom-5 right-5 flex items-center gap-1.5">
@@ -106,10 +188,12 @@ export default function About() {
                     <motion.span
                       animate={{
                         width: currentImage === index ? 22 : 5,
-                        opacity: currentImage === index ? 1 : 0.4,
+                        opacity:
+                          currentImage === index ? 1 : 0.4,
                       }}
                       transition={{
                         duration: 0.35,
+                        ease: [0.22, 1, 0.36, 1],
                       }}
                       className="block h-1 rounded-full bg-white"
                     />
@@ -123,87 +207,89 @@ export default function About() {
           <motion.div
             initial={{
               opacity: 0,
-              scale: 0.8,
-              rotate: -5,
+              scale: 0.7,
+              rotate: -8,
+              y: 20,
             }}
             whileInView={{
               opacity: 1,
               scale: 1,
               rotate: 0,
+              y: 0,
             }}
-            viewport={{ once: true }}
+            viewport={{
+              once: true,
+              amount: 0.3,
+            }}
             transition={{
               delay: 0.5,
-              duration: 0.7,
+              duration: 0.8,
+              ease: [0.22, 1, 0.36, 1],
             }}
-            className="absolute -bottom-6 -right-3 rounded-2xl bg-[#C86B45] p-6 text-white shadow-xl sm:-right-6"
+            whileHover={{
+              y: -5,
+              rotate: -2,
+            }}
+            className="absolute -bottom-6 -right-3 rounded-2xl bg-[#C86B45] p-6 text-white shadow-[0_15px_40px_rgba(0,0,0,0.25)] sm:-right-6"
           >
-            <p className="font-serif text-4xl">Desde</p>
+            <p className="font-serif text-4xl leading-none">
+              Desde
+            </p>
 
-            <p className="mt-1 text-xs uppercase tracking-[0.18em] text-white/70">
+            <p className="mt-2 text-xs uppercase tracking-[0.18em] text-white/70">
               Arequipa, Perú
             </p>
           </motion.div>
         </motion.div>
 
-        {/* CONTENIDO */}
-        <div>
-          <motion.div
-            initial={{
-              opacity: 0,
-              x: 60,
-            }}
-            whileInView={{
-              opacity: 1,
-              x: 0,
-            }}
-            viewport={{
-              once: true,
-              amount: 0.25,
-            }}
-            transition={{
-              duration: 0.9,
-              ease: [0.22, 1, 0.36, 1],
-            }}
+        {/* =====================================================
+            CONTENIDO CENTRADO
+        ===================================================== */}
+        <motion.div
+          variants={contentVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{
+            once: true,
+            amount: 0.2,
+          }}
+          className="flex flex-col items-center text-center"
+        >
+          {/* EYEBROW */}
+          <motion.p
+            variants={textVariants}
+            className="text-xs font-semibold uppercase tracking-[0.28em] text-[#C86B45]"
           >
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#C86B45]">
-              Nuestra historia
-            </p>
+            Nuestra historia
+          </motion.p>
 
-            <h2 className="mt-5 max-w-2xl font-serif text-5xl leading-[0.95] tracking-[-0.03em] text-[#F7F2E8] sm:text-6xl">
-              Tradición con una
-              <br />
-              <span className="text-white/90">
-                mirada diferente.
-              </span>
-            </h2>
+          {/* TÍTULO */}
+          <motion.h2
+            variants={textVariants}
+            className="mt-5 max-w-2xl font-serif text-5xl leading-[0.95] tracking-[-0.035em] text-[#F7F2E8] sm:text-6xl lg:text-[4.2rem]"
+          >
+            Tradición con una
+            <br />
+            <span className="text-white/90">
+              mirada diferente.
+            </span>
+          </motion.h2>
 
-            <p className="mt-7 max-w-xl text-base leading-8 text-white/50">
-              Creemos que la cocina peruana puede contar historias sin
-              perder sus raíces. Trabajamos con ingredientes locales,
-              técnicas contemporáneas y mucho respeto por nuestra
-              tradición.
-            </p>
-          </motion.div>
+          {/* DESCRIPCIÓN */}
+          <motion.p
+            variants={textVariants}
+            className="mt-7 max-w-xl text-sm leading-7 text-white/50 sm:text-base"
+          >
+            Creemos que la cocina peruana puede contar historias
+            sin perder sus raíces. Trabajamos con ingredientes
+            locales, técnicas contemporáneas y mucho respeto por
+            nuestra tradición.
+          </motion.p>
 
           {/* CARACTERÍSTICAS */}
           <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{
-              once: true,
-              amount: 0.2,
-            }}
-            variants={{
-              hidden: {},
-              visible: {
-                transition: {
-                  staggerChildren: 0.12,
-                  delayChildren: 0.2,
-                },
-              },
-            }}
-            className="mt-10 grid gap-5 sm:grid-cols-3"
+            variants={contentVariants}
+            className="mt-10 grid w-full max-w-2xl gap-5 sm:grid-cols-3"
           >
             {[
               {
@@ -227,34 +313,37 @@ export default function About() {
               return (
                 <motion.div
                   key={item.title}
-                  variants={{
-                    hidden: {
-                      opacity: 0,
-                      y: 25,
-                    },
-                    visible: {
-                      opacity: 1,
-                      y: 0,
-                      transition: {
-                        duration: 0.6,
-                      },
-                    },
-                  }}
+                  variants={featureVariants}
                   whileHover={{
-                    y: -5,
+                    y: -6,
                   }}
-                  className="border-t border-white/10 pt-5"
+                  transition={{
+                    duration: 0.3,
+                  }}
+                  className="group border-t border-white/10 pt-5 text-center"
                 >
-                  <Icon
-                    size={21}
-                    className="text-[#C86B45]"
-                  />
+                  <motion.div
+                    whileHover={{
+                      scale: 1.12,
+                      rotate: 5,
+                    }}
+                    transition={{
+                      duration: 0.3,
+                    }}
+                    className="flex justify-center"
+                  >
+                    <Icon
+                      size={21}
+                      strokeWidth={1.7}
+                      className="text-[#C86B45]"
+                    />
+                  </motion.div>
 
                   <h3 className="mt-4 text-sm font-semibold text-[#F7F2E8]">
                     {item.title}
                   </h3>
 
-                  <p className="mt-2 text-xs leading-5 text-white/40">
+                  <p className="mx-auto mt-2 max-w-[150px] text-xs leading-5 text-white/40">
                     {item.text}
                   </p>
                 </motion.div>
@@ -262,30 +351,36 @@ export default function About() {
             })}
           </motion.div>
 
-          {/* LINK */}
+          {/* CTA */}
           <motion.a
+            variants={textVariants}
             href="#contacto"
-            initial={{
-              opacity: 0,
-            }}
-            whileInView={{
-              opacity: 1,
-            }}
-            viewport={{
-              once: true,
-            }}
-            transition={{
-              delay: 0.6,
-            }}
             whileHover={{
-              x: 5,
+              y: -3,
+              scale: 1.02,
             }}
-            className="mt-10 inline-flex items-center gap-2 text-sm font-semibold text-[#F7F2E8]"
+            whileTap={{
+              scale: 0.97,
+            }}
+            className="group mt-10 inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.04] px-6 py-3.5 text-sm font-semibold text-[#F7F2E8] backdrop-blur-sm transition-colors duration-300 hover:border-[#C86B45]/40 hover:bg-[#C86B45]"
           >
-            Conoce más sobre nosotros
-            <ArrowUpRight size={17} />
+            <span>
+              Conoce más sobre nosotros
+            </span>
+
+            <motion.span
+              whileHover={{
+                rotate: 45,
+              }}
+              transition={{
+                duration: 0.3,
+              }}
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-[#C86B45] text-white transition-colors duration-300 group-hover:bg-white group-hover:text-[#C86B45]"
+            >
+              <ArrowUpRight size={15} />
+            </motion.span>
           </motion.a>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

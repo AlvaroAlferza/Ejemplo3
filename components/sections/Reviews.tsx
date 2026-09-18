@@ -1,10 +1,8 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "motion/react";
 import {
-  ArrowLeft,
-  ArrowRight,
   Quote,
   Star,
   Sparkles,
@@ -223,7 +221,7 @@ const reviews = [
   },
 ];
 
-function getRandomReviews(items: typeof reviews, count: number) {
+function getRandomReviews(items: typeof reviews) {
   const shuffled = [...items];
 
   for (let i = shuffled.length - 1; i > 0; i--) {
@@ -235,301 +233,516 @@ function getRandomReviews(items: typeof reviews, count: number) {
     ];
   }
 
-  return shuffled.slice(0, count);
+  return shuffled;
 }
 
 export default function Reviews() {
-  const selectedReviews = useMemo(() => {
-    return getRandomReviews(reviews, 3);
+  const shuffledReviews = useMemo(() => getRandomReviews(reviews), []);
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [cardsPerView, setCardsPerView] = useState(3);
+  const [cardWidth, setCardWidth] = useState(0);
+
+  const viewportRef = useRef<HTMLDivElement>(null);
+
+  /* ========================================================= */
+  /* RESPONSIVE / ANCHO DE TARJETA */
+  /* ========================================================= */
+
+  useEffect(() => {
+    const updateLayout = () => {
+      if (!viewportRef.current) return;
+
+      const width = viewportRef.current.offsetWidth;
+
+      const perView = window.innerWidth < 768 ? 1 : 3;
+
+      setCardsPerView(perView);
+
+      const gap = perView === 1 ? 0 : 16;
+
+      const calculatedWidth =
+        perView === 1
+          ? width
+          : (width - gap * (perView - 1)) / perView;
+
+      setCardWidth(calculatedWidth);
+    };
+
+    updateLayout();
+
+    window.addEventListener("resize", updateLayout);
+
+    return () => {
+      window.removeEventListener("resize", updateLayout);
+    };
   }, []);
+
+  /* ========================================================= */
+  /* CARRUSEL AUTOMÁTICO */
+  /* ========================================================= */
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((previous) => {
+        const maxIndex = shuffledReviews.length - cardsPerView;
+
+        if (previous >= maxIndex) {
+          return 0;
+        }
+
+        return previous + 1;
+      });
+    }, 5500);
+
+    return () => clearInterval(interval);
+  }, [cardsPerView, shuffledReviews.length]);
+
+  /* ========================================================= */
+  /* DESPLAZAMIENTO */
+  /* ========================================================= */
+
+  const gap = cardsPerView === 1 ? 0 : 16;
+
+  const translateX =
+    currentIndex * (cardWidth + gap);
 
   return (
     <section
       id="resenas"
-      className="relative overflow-hidden bg-[#F7F2E8] px-6 py-24 sm:px-8 lg:px-10 lg:py-32"
+      className="relative overflow-hidden bg-[#F7F2E8] px-6 py-14 sm:px-8 lg:px-10 lg:py-16"
     >
-      {/* Decorative background */}
+      {/* ========================================================= */}
+      {/* FONDO DECORATIVO */}
+      {/* ========================================================= */}
+
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <motion.div
           animate={{
-            x: [0, 40, 0],
+            x: [0, 45, 0],
             y: [0, -25, 0],
+            scale: [1, 1.08, 1],
           }}
           transition={{
-            duration: 12,
+            duration: 14,
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="absolute -left-32 top-20 h-80 w-80 rounded-full bg-[#C86B45]/[0.045] blur-3xl"
+          className="absolute -left-40 top-0 h-96 w-96 rounded-full bg-[#C86B45]/[0.055] blur-3xl"
         />
 
         <motion.div
           animate={{
-            x: [0, -30, 0],
-            y: [0, 35, 0],
+            x: [0, -35, 0],
+            y: [0, 30, 0],
+            scale: [1, 1.1, 1],
           }}
           transition={{
-            duration: 15,
+            duration: 17,
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="absolute -right-32 bottom-10 h-96 w-96 rounded-full bg-[#C86B45]/[0.04] blur-3xl"
+          className="absolute -right-40 bottom-0 h-[420px] w-[420px] rounded-full bg-[#C86B45]/[0.045] blur-3xl"
         />
+
+        <div className="absolute left-1/2 top-0 h-px w-40 -translate-x-1/2 bg-gradient-to-r from-transparent via-[#C86B45]/40 to-transparent" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl">
-        {/* Heading */}
+        {/* ========================================================= */}
+        {/* ENCABEZADO */}
+        {/* ========================================================= */}
+
         <motion.div
-          initial={{ opacity: 0, y: 35 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
+          initial={{
+            opacity: 0,
+            y: 25,
+            filter: "blur(6px)",
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+            filter: "blur(0px)",
+          }}
+          viewport={{
+            once: true,
+            amount: 0.3,
+          }}
           transition={{
-            duration: 0.8,
+            duration: 0.75,
             ease: [0.22, 1, 0.36, 1],
           }}
-          className="mx-auto max-w-3xl text-center"
+          className="mx-auto max-w-2xl text-center"
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mx-auto mb-5 flex w-fit items-center gap-2 rounded-full border border-[#C86B45]/15 bg-white/70 px-4 py-2 backdrop-blur-sm"
+            initial={{
+              opacity: 0,
+              scale: 0.85,
+              y: 10,
+            }}
+            whileInView={{
+              opacity: 1,
+              scale: 1,
+              y: 0,
+            }}
+            viewport={{
+              once: true,
+            }}
+            transition={{
+              duration: 0.55,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="mx-auto mb-4 flex w-fit items-center gap-2 rounded-full border border-[#C86B45]/25 bg-white/60 px-3.5 py-1.5 shadow-[0_5px_25px_rgba(23,23,20,0.04)] backdrop-blur-sm"
           >
             <Sparkles
-              size={13}
+              size={12}
               className="text-[#C86B45]"
               strokeWidth={1.8}
             />
 
-            <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#C86B45]">
+            <span className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#C86B45]">
               Lo que dicen de nosotros
             </span>
           </motion.div>
 
-          <h2 className="font-serif text-5xl leading-[0.95] tracking-[-0.04em] text-[#171714] sm:text-6xl lg:text-7xl">
-            Experiencias que
-            <br />
+          <h2 className="font-serif text-4xl leading-[0.95] tracking-[-0.04em] text-[#171714] sm:text-5xl lg:text-[4rem]">
+            Experiencias que{" "}
             <span className="text-[#C86B45]">se quedan.</span>
           </h2>
 
-          <p className="mx-auto mt-6 max-w-xl text-sm leading-7 text-black/45 sm:text-base">
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-black/45">
             Cada visita deja una historia. Descubre lo que nuestros visitantes
             han vivido en Casa Misti.
           </p>
         </motion.div>
 
-        {/* Reviews */}
+        {/* ========================================================= */}
+        {/* CARRUSEL */}
+        {/* ========================================================= */}
+
         <motion.div
-          initial="hidden"
-          whileInView="visible"
+          initial={{
+            opacity: 0,
+            y: 30,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
           viewport={{
             once: true,
             amount: 0.1,
           }}
-          variants={{
-            hidden: {},
-            visible: {
-              transition: {
-                staggerChildren: 0.15,
-              },
-            },
+          transition={{
+            duration: 0.75,
+            ease: [0.22, 1, 0.36, 1],
           }}
-          className="mt-16 grid gap-5 lg:grid-cols-3"
+          className="mt-9 overflow-hidden"
+          ref={viewportRef}
         >
-          {selectedReviews.map((review, index) => (
-            <motion.article
-              key={review.id}
-              variants={{
-                hidden: {
-                  opacity: 0,
-                  y: 50,
-                  scale: 0.97,
-                },
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  scale: 1,
-                  transition: {
-                    duration: 0.8,
-                    ease: [0.22, 1, 0.36, 1],
-                  },
-                },
-              }}
-              whileHover={{
-                y: -8,
-              }}
-              transition={{
-                duration: 0.4,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="group relative"
-            >
-              <div className="relative flex h-full min-h-[330px] flex-col overflow-hidden rounded-[1.8rem] border border-black/[0.06] bg-white p-7 shadow-[0_10px_40px_rgba(23,23,20,0.04)] transition-all duration-500 group-hover:border-[#C86B45]/20 group-hover:shadow-[0_25px_70px_rgba(23,23,20,0.11)] sm:p-8">
-                {/* Decorative quote */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.7 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{
-                    delay: index * 0.15 + 0.2,
-                    duration: 0.5,
-                  }}
-                  className="absolute right-7 top-7 flex h-11 w-11 items-center justify-center rounded-full bg-[#F7F2E8]"
-                >
-                  <Quote
-                    size={18}
-                    className="text-[#C86B45]"
-                    strokeWidth={1.5}
-                  />
-                </motion.div>
+          <motion.div
+            animate={{
+              x: -translateX,
+            }}
+            transition={{
+              duration: 1.35,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="flex"
+            style={{
+              gap: `${gap}px`,
+            }}
+          >
+            {shuffledReviews.map((review, index) => (
+              <motion.article
+                key={review.id}
+                whileHover={{
+                  y: -6,
+                }}
+                transition={{
+                  duration: 0.35,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="group relative shrink-0"
+                style={{
+                  width: cardWidth
+                    ? `${cardWidth}px`
+                    : cardsPerView === 1
+                      ? "100%"
+                      : "calc((100% - 32px) / 3)",
+                }}
+              >
+                {/* ================================================= */}
+                {/* BORDE ANIMADO EXTERIOR */}
+                {/* ================================================= */}
 
-                {/* Stars */}
-                <div className="flex items-center gap-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <motion.div
-                      key={star}
-                      initial={{
-                        opacity: 0,
-                        scale: 0,
-                        rotate: -20,
-                      }}
-                      whileInView={{
-                        opacity: 1,
-                        scale: 1,
-                        rotate: 0,
-                      }}
-                      viewport={{ once: true }}
-                      transition={{
-                        delay: index * 0.15 + star * 0.06,
-                        duration: 0.35,
-                        ease: [0.22, 1, 0.36, 1],
-                      }}
-                    >
-                      <Star
-                        size={14}
-                        fill="#C86B45"
-                        className="text-[#C86B45]"
-                        strokeWidth={1.5}
-                      />
-                    </motion.div>
-                  ))}
+                <div className="absolute -inset-[2px] overflow-hidden rounded-[1.55rem] opacity-90 transition-opacity duration-500 group-hover:opacity-100">
+                  <motion.div
+                    animate={{
+                      rotate: [0, 360],
+                    }}
+                    transition={{
+                      duration: 8 + (index % 3) * 2,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
+                    className="absolute -left-1/2 -top-1/2 h-[200%] w-[200%] bg-[conic-gradient(from_0deg,transparent_0deg,transparent_185deg,#C86B45_230deg,#E09A7B_265deg,#C86B45_300deg,transparent_345deg)]"
+                  />
                 </div>
 
-                {/* Review text */}
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{
-                    delay: index * 0.15 + 0.4,
-                    duration: 0.7,
-                  }}
-                  className="mt-7 flex-1 font-serif text-[1.3rem] leading-[1.45] tracking-[-0.02em] text-[#171714] sm:text-[1.4rem]"
-                >
-                  “{review.text}”
-                </motion.p>
+                {/* ================================================= */}
+                {/* TARJETA */}
+                {/* ================================================= */}
 
-                {/* Divider */}
-                <div className="my-7 h-px w-full bg-black/[0.06]" />
+                <div className="relative flex min-h-[275px] flex-col overflow-hidden rounded-[1.4rem] border border-[#C86B45]/25 bg-[#FFFDF8] p-6 shadow-[0_12px_35px_rgba(23,23,20,0.06)] transition-all duration-500 group-hover:border-[#C86B45]/55 group-hover:shadow-[0_25px_60px_rgba(200,107,69,0.14)] sm:p-7">
+                  {/* Brillo */}
 
-                {/* User */}
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <motion.div
-                      whileHover={{
-                        scale: 1.08,
-                        rotate: 5,
-                      }}
-                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#171714] text-sm font-semibold text-white"
-                    >
-                      {review.name.charAt(0)}
-                    </motion.div>
+                  <motion.div
+                    initial={{
+                      x: "-130%",
+                      opacity: 0,
+                    }}
+                    whileHover={{
+                      x: "130%",
+                      opacity: 0.8,
+                    }}
+                    transition={{
+                      duration: 0.8,
+                      ease: "easeInOut",
+                    }}
+                    className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 rotate-[12deg] bg-gradient-to-r from-transparent via-white/80 to-transparent blur-md"
+                  />
 
-                    <div>
-                      <p className="text-sm font-semibold text-[#171714]">
-                        {review.name}
-                      </p>
+                  {/* Decoración esquina */}
 
-                      <p className="mt-0.5 text-xs text-black/35">
-                        {review.city}
-                      </p>
-                    </div>
+                  <div className="pointer-events-none absolute right-0 top-0 h-24 w-24 overflow-hidden">
+                    <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full border border-[#C86B45]/15" />
+                    <div className="absolute -right-4 -top-4 h-16 w-16 rounded-full border border-[#C86B45]/15" />
                   </div>
 
-                  <span className="text-[10px] uppercase tracking-[0.12em] text-black/25">
-                    {review.date}
-                  </span>
-                </div>
+                  {/* Quote */}
 
-                {/* Bottom hover line */}
-                <motion.div
-                  initial={{
-                    scaleX: 0,
-                    opacity: 0,
-                  }}
-                  whileHover={{
-                    scaleX: 1,
-                    opacity: 1,
-                  }}
-                  transition={{
-                    duration: 0.5,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
-                  className="absolute bottom-0 left-8 right-8 h-[2px] origin-left rounded-full bg-gradient-to-r from-[#C86B45] via-[#D98A67] to-transparent"
-                />
-              </div>
-            </motion.article>
-          ))}
+                  <div className="absolute right-6 top-6 flex h-10 w-10 items-center justify-center rounded-full border border-[#C86B45]/25 bg-[#F7F2E8]">
+                    <Quote
+                      size={17}
+                      className="text-[#C86B45]"
+                      strokeWidth={1.5}
+                    />
+                  </div>
+
+                  {/* Estrellas */}
+
+                  <div className="relative z-10 flex items-center gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <motion.div
+                        key={star}
+                        initial={{
+                          opacity: 0,
+                          scale: 0,
+                        }}
+                        whileInView={{
+                          opacity: 1,
+                          scale: 1,
+                        }}
+                        viewport={{
+                          once: true,
+                        }}
+                        transition={{
+                          delay: (index % 3) * 0.08 + star * 0.05,
+                          duration: 0.3,
+                        }}
+                      >
+                        <Star
+                          size={13}
+                          fill="#C86B45"
+                          className="text-[#C86B45]"
+                          strokeWidth={1.4}
+                        />
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  {/* Número */}
+
+                  <div className="mt-3 flex items-center gap-2">
+                    <span className="h-px w-5 bg-[#C86B45]/50" />
+
+                    <span className="text-[8px] font-semibold uppercase tracking-[0.22em] text-[#171714]/30">
+                      Opinión · {String((index % 9) + 1).padStart(2, "0")}
+                    </span>
+                  </div>
+
+                  {/* Texto */}
+
+                  <p className="relative z-10 mt-5 flex-1 font-serif text-[1.15rem] leading-[1.42] tracking-[-0.02em] text-[#171714] sm:text-[1.2rem]">
+                    “{review.text}”
+                  </p>
+
+                  {/* Separador */}
+
+                  <div className="relative my-5 h-px w-full overflow-hidden bg-[#171714]/[0.08]">
+                    <motion.div
+                      initial={{
+                        scaleX: 0,
+                      }}
+                      whileInView={{
+                        scaleX: 1,
+                      }}
+                      viewport={{
+                        once: true,
+                      }}
+                      transition={{
+                        duration: 0.8,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
+                      className="absolute inset-y-0 left-0 w-1/3 origin-left bg-[#C86B45]/60"
+                    />
+                  </div>
+
+                  {/* Usuario */}
+
+                  <div className="relative z-10 flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#171714] text-xs font-semibold text-[#F7F2E8] shadow-[0_5px_15px_rgba(23,23,20,0.12)]">
+                        {review.name.charAt(0)}
+
+                        <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-[#FFFDF8] bg-[#C86B45]" />
+                      </div>
+
+                      <div>
+                        <p className="text-xs font-semibold text-[#171714]">
+                          {review.name}
+                        </p>
+
+                        <p className="mt-0.5 text-[10px] text-black/35">
+                          {review.city}
+                        </p>
+                      </div>
+                    </div>
+
+                    <span className="text-[9px] uppercase tracking-[0.12em] text-black/25">
+                      {review.date}
+                    </span>
+                  </div>
+
+                  {/* ================================================= */}
+                  {/* LED INFERIOR */}
+                  {/* ================================================= */}
+
+                  <div className="absolute bottom-0 left-6 right-6 h-[2px] overflow-hidden rounded-full bg-[#C86B45]/15">
+                    <motion.div
+                      animate={{
+                        x: ["-120%", "220%"],
+                      }}
+                      transition={{
+                        duration: 3.5,
+                        repeat: Infinity,
+                        repeatDelay: 1.5,
+                        ease: "easeInOut",
+                        delay: (index % 3) * 0.4,
+                      }}
+                      className="h-full w-1/2 bg-gradient-to-r from-transparent via-[#C86B45] to-transparent shadow-[0_0_12px_rgba(200,107,69,0.9)]"
+                    />
+                  </div>
+                </div>
+              </motion.article>
+            ))}
+          </motion.div>
         </motion.div>
 
-        {/* Bottom info */}
+        {/* ========================================================= */}
+        {/* RATING CENTRADO */}
+        {/* ========================================================= */}
+
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{
-            duration: 0.7,
-            delay: 0.2,
+          initial={{
+            opacity: 0,
+            y: 15,
           }}
-          className="mt-10 flex flex-col items-center justify-between gap-5 border-t border-black/[0.06] pt-7 sm:flex-row"
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+            amount: 0.3,
+          }}
+          transition={{
+            duration: 0.6,
+            delay: 0.15,
+          }}
+          className="mt-7 flex flex-col items-center justify-center"
         >
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1">
-              <Star
-                size={15}
-                fill="#C86B45"
-                className="text-[#C86B45]"
-              />
-              <span className="text-sm font-semibold text-[#171714]">
-                5.0
-              </span>
-            </div>
+          <div className="flex items-center gap-1.5">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <motion.div
+                key={star}
+                initial={{
+                  opacity: 0,
+                  scale: 0,
+                }}
+                whileInView={{
+                  opacity: 1,
+                  scale: 1,
+                }}
+                viewport={{
+                  once: true,
+                }}
+                transition={{
+                  delay: star * 0.06,
+                  duration: 0.3,
+                }}
+              >
+                <Star
+                  size={15}
+                  fill="#C86B45"
+                  className="text-[#C86B45]"
+                  strokeWidth={1.4}
+                />
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="mt-2 flex items-center gap-2">
+            <span className="text-sm font-semibold text-[#171714]">
+              5.0
+            </span>
 
             <span className="h-1 w-1 rounded-full bg-black/20" />
 
-            <span className="text-xs text-black/40">
+            <span className="text-[10px] uppercase tracking-[0.14em] text-black/40">
               Opiniones de nuestros visitantes
             </span>
           </div>
+        </motion.div>
 
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              aria-label="Reseñas anteriores"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-black/[0.08] bg-white text-[#171714] transition-all duration-300 hover:border-[#C86B45]/30 hover:bg-[#C86B45] hover:text-white"
-            >
-              <ArrowLeft size={15} />
-            </button>
+        {/* ========================================================= */}
+        {/* DETALLE FINAL */}
+        {/* ========================================================= */}
 
-            <button
-              type="button"
-              aria-label="Siguientes reseñas"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-black/[0.08] bg-white text-[#171714] transition-all duration-300 hover:border-[#C86B45]/30 hover:bg-[#C86B45] hover:text-white"
-            >
-              <ArrowRight size={15} />
-            </button>
-          </div>
+        <motion.div
+          initial={{
+            opacity: 0,
+          }}
+          whileInView={{
+            opacity: 1,
+          }}
+          viewport={{
+            once: true,
+          }}
+          transition={{
+            duration: 0.7,
+            delay: 0.3,
+          }}
+          className="mt-5 flex items-center justify-center gap-3"
+        >
+          <span className="h-px w-8 bg-[#C86B45]/30" />
+
+          <span className="text-[8px] font-semibold uppercase tracking-[0.25em] text-black/20">
+            Casa Misti · Arequipa
+          </span>
+
+          <span className="h-px w-8 bg-[#C86B45]/30" />
         </motion.div>
       </div>
     </section>

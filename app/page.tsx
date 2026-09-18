@@ -22,9 +22,10 @@ export default function Home() {
         <About />
         <Gallery />
         <Reservations />
+        <Reviews />
         <Location />
         <CTA />
-        <Reviews />
+        
       </main>
 
       <Footer />
